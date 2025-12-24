@@ -11,26 +11,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isScrolled, setIsScrolled] = useState(false);
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const handleBeforeInstallPrompt = (e) => {
-            e.preventDefault();
-            setDeferredPrompt(e);
-        };
-        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    }, []);
-
-    const handleInstallClick = async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            setDeferredPrompt(null);
-        }
-    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -148,15 +129,6 @@ const Header = () => {
                                                 <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><FiPackage /></div>
                                                 My Orders
                                             </Link>
-                                            {deferredPrompt && (
-                                                <button
-                                                    onClick={handleInstallClick}
-                                                    className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors font-bold"
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center"><FiPackage /></div>
-                                                    Install App
-                                                </button>
-                                            )}
                                             <div className="my-2 border-t border-slate-100"></div>
                                             <button onClick={logout} className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-rose-600 hover:bg-rose-50 rounded-xl transition-colors font-bold">
                                                 <div className="w-8 h-8 rounded-lg bg-rose-100 flex items-center justify-center"><FiLogOut /></div>

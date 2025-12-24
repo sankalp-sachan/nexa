@@ -8,10 +8,19 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
       devOptions: {
-        enabled: true
+        enabled: true,
+        type: 'module',
       },
-      includeAssets: ['favicon.png'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        navigateFallback: 'index.html'
+      },
+      includeAssets: ['favicon.png', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
         name: 'NexusMart Premium Store',
         short_name: 'NexusMart',
@@ -19,7 +28,9 @@ export default defineConfig({
         theme_color: '#6366f1',
         background_color: '#ffffff',
         display: 'standalone',
+        scope: '/',
         start_url: '/',
+        orientation: 'portrait',
         icons: [
           {
             src: 'favicon.png',
