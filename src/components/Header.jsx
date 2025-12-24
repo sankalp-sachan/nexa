@@ -11,7 +11,33 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isScrolled, setIsScrolled] = useState(false);
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [showInstallBtn, setShowInstallBtn] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setShowInstallBtn(true);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            setShowInstallBtn(false);
+        }
+        setDeferredPrompt(null);
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -142,6 +168,16 @@ const Header = () => {
                             <Link to="/login" className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all">
                                 Login
                             </Link>
+                        )}
+
+                        {showInstallBtn && (
+                            <button
+                                onClick={handleInstallClick}
+                                className="hidden lg:flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-xl font-bold text-sm border border-indigo-100 hover:bg-indigo-100 transition-all"
+                            >
+                                <FiPackage />
+                                Install App
+                            </button>
                         )}
 
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2.5 text-slate-600 hover:bg-slate-100 rounded-xl">
