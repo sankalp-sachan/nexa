@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import axios from '../api/axios';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-hot-toast';
@@ -10,7 +10,7 @@ export const WishlistProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const { isAuthenticated } = useAuth();
 
-    const fetchWishlist = async () => {
+    const fetchWishlist = useCallback(async () => {
         if (!isAuthenticated) return;
         setLoading(true);
         try {
@@ -21,7 +21,7 @@ export const WishlistProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [isAuthenticated]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -29,7 +29,7 @@ export const WishlistProvider = ({ children }) => {
         } else {
             setWishlistItems([]);
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, fetchWishlist]);
 
     const addToWishlist = async (productId) => {
         if (!isAuthenticated) {
@@ -77,4 +77,5 @@ export const WishlistProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useWishlist = () => useContext(WishlistContext);

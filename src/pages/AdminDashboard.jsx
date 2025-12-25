@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from '../api/axios';
 import { toast } from 'react-hot-toast';
 
@@ -30,43 +30,43 @@ const AdminDashboard = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [orderTab, setOrderTab] = useState('pending');
 
-    useEffect(() => {
-        fetchOrders();
-        fetchCategories();
-    }, []);
-
-    const fetchOrders = async () => {
+    const fetchOrders = useCallback(async () => {
         try {
             const { data } = await axios.get('/orders/admin/orders');
             setOrders(data.orders);
         } catch (error) {
             console.error(error);
         }
-    };
+    }, []);
 
-    const fetchCategories = async () => {
+    const fetchCategories = useCallback(async () => {
         try {
             const { data } = await axios.get('/categories');
             setCategories(data.categories || []);
         } catch (error) {
             console.error("Failed to fetch categories", error);
         }
-    };
+    }, []);
 
-    const fetchProducts = async () => {
+    const fetchProducts = useCallback(async () => {
         try {
             const { data } = await axios.get('/products');
             setProducts(data.products);
         } catch (error) {
             console.error(error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchOrders();
+        fetchCategories();
+    }, [fetchOrders, fetchCategories]);
 
     useEffect(() => {
         if (activeTab === 'products') {
             fetchProducts();
         }
-    }, [activeTab]);
+    }, [activeTab, fetchProducts]);
 
     const verifyPayment = async (orderId) => {
         try {
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
             });
             toast.success('Payment Verified');
             fetchOrders();
-        } catch (error) {
+        } catch {
             toast.error('Failed to verify payment');
         }
     };
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
             toast.success('Payment Marked as Failed');
             fetchOrders();
             if (selectedOrder) setSelectedOrder(null);
-        } catch (error) {
+        } catch {
             toast.error('Failed to update payment status');
         }
     };

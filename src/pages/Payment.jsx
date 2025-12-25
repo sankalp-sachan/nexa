@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
+
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -8,7 +8,6 @@ import { FiShield, FiCheckCircle, FiInfo, FiCreditCard } from 'react-icons/fi';
 
 const Payment = () => {
     const { cartItems, shippingInfo, clearCart } = useCart();
-    const { user } = useAuth();
     const navigate = useNavigate();
     const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
 
