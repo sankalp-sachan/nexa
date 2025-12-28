@@ -128,14 +128,14 @@ const Payment = () => {
                                     <div className="space-y-6">
                                         <div className="inline-block p-3 border-2 border-gray-100 rounded-xl bg-white shadow-sm">
                                             <img
-                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=nexusmart@fampay&pn=NexusMart&am=${orderInfo?.totalPrice || 0}&cu=INR`}
+                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=sankalpsachan@fam&pn=NexusMart&am=${orderInfo?.totalPrice || 0}&cu=INR`}
                                                 alt="Demo QR Code"
                                                 className="w-40 h-40 md:w-48 md:h-48"
                                             />
                                         </div>
 
                                         <div className="space-y-1">
-                                            <p className="text-sm text-gray-400 font-medium">UPI ID: <span className="text-gray-900 font-bold italic">nexusmart@fampay</span></p>
+                                            <p className="text-sm text-gray-400 font-medium">UPI ID: <span className="text-gray-900 font-bold italic">sankalpsachan@fam</span></p>
                                             <p className="text-2xl font-black text-gray-900 tracking-tight">₹{orderInfo?.totalPrice.toLocaleString()}</p>
                                         </div>
 
